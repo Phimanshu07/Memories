@@ -16,8 +16,6 @@ app.use('/posts', postsRoute);
 app.use('/users', usersRoute);
 
 
-// const CONNECTION_URL = 'mongodb+srv://admin:admin@cluster0.9brw8.mongodb.net/nodeJs?retryWrites=true&w=majority';
-
 const PORT = process.env.PORT || 5000;
 
 mongoose.connect(process.env.CONNECTION_URL, {useNewUrlParser:true, useUnifiedTopology:true})
