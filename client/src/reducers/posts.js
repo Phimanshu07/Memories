@@ -1,19 +1,46 @@
-import { UPDATE,LIKE,CREATE,DELETE,FETCH_ALL } from '../constants/actionTypes';
+import { COMMENT_FETCH,FETCH_POST,UPDATE,LIKE,CREATE,DELETE,FETCH_ALL, FETCH_BY_SEARCH,START_LOADING,END_LOADING } from '../constants/actionTypes';
 
-export default (posts = [], action) => {
+export default (state = { isLoading: true, posts: [] }, action) => {
     switch (action.type) {
         case DELETE:
-            return posts.filter((post) => post._id !== action.payload);
+            return { ...state, posts: state.posts.filter((post) => post._id !== action.payload) };
         case LIKE:   
-            return posts.map((post)=> post._id === action.payload._id ? action.payload : post);
+            return { ...state, posts: state.posts.map((post)=> post._id === action.payload._id ? action.payload : post) };
+        case COMMENT_FETCH:
+            console.log(action.payload)
+            return {
+                ...state,
+                posts: state.posts.map((post) => {
+                    if(post._id === action.payload._id) return action.payload
+                    return post
+                })           
+            }    
         case UPDATE:
-            return posts.map((post)=> post._id === action.payload._id ? action.payload : post);
+            return { ...state, posts: state.posts.map((post)=> post._id === action.payload._id ? action.payload : post) };
         case FETCH_ALL:
-            return action.payload;
-          
+            return {
+                ...state,
+                posts: action.payload.data,
+                currentPage: action.payload.currentPage,
+                numberOfPages: action.payload.numberOfPages
+            }
+        case FETCH_BY_SEARCH:
+            return {
+                ...state,
+                posts: action.payload
+            };  
+        case FETCH_POST:
+            return {
+                ...state,
+                post: action.payload.post
+            };     
         case CREATE:
-            return [...posts, action.payload];    
+            return { ...state,posts: [...state.posts, action.payload]};    
+        case START_LOADING:
+            return { ...state, isLoading: true }    ;
+        case END_LOADING:
+            return { ...state, isLoading: false }    ;
         default:
-            return posts;
+            return state;
     }
 }
